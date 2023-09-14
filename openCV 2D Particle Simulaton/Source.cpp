@@ -22,7 +22,7 @@ float normalise(int vx, int vy) {
 
 void click(int event, int x, int y, int flags, void* userdata) {
 	if (event == EVENT_LBUTTONDOWN) {
-		vector<int> location = {x,y};
+		vector<int> location = { x,y };
 		Points[0] = location;
 		N += 1;
 
@@ -44,21 +44,21 @@ int main() {
 	int radius = 20;
 
 	int centerx = x / 2;
-	int centery = y - radius -1;
-	
+	int centery = y - radius - 1;
+
 	int check = 0;
 
 
 	//colliders
 	srand(time(0));
-	int num_coll = rand() % 9 + 2; //between 2-10
+	int num_coll = rand() % 3 + 2; //between 2-4
 	int sqsize = 10;
 	vector<vector<int>> colliders;
 	for (int i = 0; i < num_coll; i++) {
 		int x_col = rand() % (x - sqsize * 2) + sqsize;
 		int y_col = rand() % (y - sqsize * 2) + sqsize;
-		if (x_col < (centerx - radius * 2) || x_col > (centerx + radius * 2)) {
-			if (y_col < (centery - radius * 2) && y_col > radius*2) {
+		if (x_col < (centerx - radius * 2) || x_col >(centerx + radius * 2)) {
+			if (y_col < (centery - radius * 2) && y_col > radius * 2) {
 				if (x_col > radius * 2 && x_col < x - radius * 2) {
 					colliders.push_back({ x_col,y_col });
 				}
@@ -67,28 +67,12 @@ int main() {
 	}
 
 	VideoCapture cap(0);
-	Mat img2;
 
 	while (true) {
 
-		cap.read(img2);
-		flip(img2, img2, 1);
-		resize(img2, img2, Size(), 1.5, 1.5);
-		img2 = img2(Range(0, 600), Range(0, 300));
 
 
 		Mat img(y, x, CV_8UC3, Scalar(0, 0, 0));
-
-
-		Mat img_gray;
-		cvtColor(img2, img_gray, COLOR_BGR2GRAY);
-		threshold(img_gray, img_gray, 150, 255, THRESH_BINARY);
-		vector<vector<Point>> contours;
-		vector<Vec4i> hierarchy;
-		findContours(img_gray, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-		drawContours(img2, contours, -1, Scalar(0, 255, 0), 2);
-
-
 
 		if (centerx < radius) {
 			centerx = radius;
@@ -120,7 +104,7 @@ int main() {
 			int rightDist = centerx - radius - rightsq;
 			int topDist = centery + radius - topsq;
 			int bottomDist = centery - radius - bottomsq;
-			
+
 			vector<vector<int>> sorting = { {abs(leftDist),'X','L'}, {abs(rightDist), 'X','R'}, {abs(topDist),'Y','T'}, {abs(bottomDist),'Y','B'} };
 			vector<int> a;
 			a = sorting[0];
@@ -157,8 +141,8 @@ int main() {
 		}
 
 		for (int i = 0; i < colliders.size(); i++) {
-			int x_start = colliders[i][0]-sqsize;
-			int y_start = colliders[i][1]-sqsize;
+			int x_start = colliders[i][0] - sqsize;
+			int y_start = colliders[i][1] - sqsize;
 			int x_end = colliders[i][0] + sqsize;
 			int y_end = colliders[i][1] + sqsize;
 			rectangle(img, Point(x_start, y_start), Point(x_end, y_end), Scalar(255, 255, 255), FILLED, LINE_AA);
@@ -168,22 +152,22 @@ int main() {
 		centery += vy;
 
 		circle(img, Point(centerx, centery), radius, Scalar(25, 25, 25), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-0.75, Scalar(50, 50, 50), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-1.5, Scalar(75, 75, 75), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-2.25, Scalar(100, 100, 100), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-3, Scalar(125, 125, 125), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-3.75, Scalar(150, 150, 150), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-4.5, Scalar(175, 175, 175), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-5.25, Scalar(200, 200, 200), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-6, Scalar(225, 225, 225), FILLED, LINE_AA);
-		circle(img, Point(centerx, centery), radius-6.75, Scalar(255, 255, 255), FILLED, LINE_AA);
-		
+		circle(img, Point(centerx, centery), radius - 0.75, Scalar(50, 50, 50), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 1.5, Scalar(75, 75, 75), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 2.25, Scalar(100, 100, 100), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 3, Scalar(125, 125, 125), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 3.75, Scalar(150, 150, 150), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 4.5, Scalar(175, 175, 175), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 5.25, Scalar(200, 200, 200), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 6, Scalar(225, 225, 225), FILLED, LINE_AA);
+		circle(img, Point(centerx, centery), radius - 6.75, Scalar(255, 255, 255), FILLED, LINE_AA);
+
 		namedWindow("Window");
 
 		setMouseCallback("Window", click);
-		
 
-		while(check<N) {
+
+		while (check < N) {
 			int x_loc = Points[0][0];
 			int y_loc = Points[0][1];
 			vx = x_loc - centerx;
@@ -200,7 +184,7 @@ int main() {
 		else {
 			vx *= 0.95;
 		}
-		
+
 		if (abs(vy) < 0.0000001) {
 			vy = 0;
 		}
@@ -208,19 +192,19 @@ int main() {
 			vy *= 0.95;
 		}
 
-		
-		
+
+
 
 		//imshow("Window", img);
-		imshow("Image", img2);
+		imshow("Window", img);
 		int key = waitKey(24);
 		if (key == 27) {
 			break;
 		}
 
-		
+
 
 	}
 
-	
+
 }
